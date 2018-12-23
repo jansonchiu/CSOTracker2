@@ -2,6 +2,7 @@ package com.deancampagnolo.csotracker;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.firebase.client.ChildEventListener;
@@ -34,7 +35,7 @@ public class MapForPast extends FragmentActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_for_past);
         mRef = new Firebase(url);
-        LatLng UCSC = new LatLng(36.9916, -122.0583);
+
         mRef.child("UserInput").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -46,18 +47,27 @@ public class MapForPast extends FragmentActivity implements OnMapReadyCallback {
                     LatLng abc = new LatLng(latLneg.getLati(), latLneg.getLongi());
                     coords.add(abc);
                 }
+                for(LatLng i : coords){//FIXME THIS IS DEFINANTLY NOT THE RIGHT WAY OF DOING THIS see other comments for more info :/
+                    MarkerOptions markerOptions = new MarkerOptions().position(i).title("Marker in Sydney");
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.jason));
+                    mMap.addMarker(markerOptions);
+                }
             }
             @Override
             public void onCancelled(FirebaseError databaseError) {
             }
+
         });
 
-        mapValues = new LatLng[1];
-        mapValues[0] = UCSC;
+
+
+       // mapValues = new LatLng[1];//FIXME COMMENTED THIS OUT
+       // mapValues[0] = UCSC;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //onMapReady(mMap);//FIXME THIS IS DEFINANTLY THE WRONG WAY TO DO THIS. I MUST CALL THIS AGAIN BECAUSE ONMAP READY
     }
     /*
     private void showData(DataSnapshot dataSnapshot){
@@ -84,18 +94,24 @@ public class MapForPast extends FragmentActivity implements OnMapReadyCallback {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //FIXME THIS IS DEFINANTLY NOT THE RIGHT WAY TO DO THIS. I NEED TO LEARN MULTITHREADING TO SOLVE THIS
+
+
+        LatLng UCSC = new LatLng(36.9916, -122.0583);
         mMap = googleMap;
         //MapController mapController = mMap.getController;
         // Add a marker in Sydney and move the camera
         //mMap.zoom
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        for(LatLng i : coords){
+
+        /*for(LatLng i : coords){
             MarkerOptions markerOptions = new MarkerOptions().position(i).title("Marker in Sydney");
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.jason));
             mMap.addMarker(markerOptions);
-        }
+        }*///FIXME this idealy should not be commented out
+        //mMap.addMarker(new MarkerOptions().position(UCSC));//for debugging
         mMap.setMinZoomPreference(15);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mapValues[0]));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(UCSC));
         //mMap.moveCamera(CameraUpdateFactory.zoomBy(4));
 
     }
