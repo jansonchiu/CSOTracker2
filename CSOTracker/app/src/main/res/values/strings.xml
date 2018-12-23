@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CSOTracker</string>
+    <string name="title_activity_report_cso">ReportCso</string>
+    <string name="title_activity_map_for_past">Map</string>
+    <string name="title_activity_map_recent">Map</string>
+    <string name="gotomap">GoToMap</string>
+    <string name="report_a_cso">Report a CSO</string>
+    <string name="full_send">Full Send</string>
+</resources>
